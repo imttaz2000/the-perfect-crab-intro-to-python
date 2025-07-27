@@ -1,30 +1,22 @@
 # Video alternative: https://vimeo.com/954334009/67af9910fc#t=1054
 
-# So far you've spent a lot of time writing new programs.
+# ✅ CHALLENGE: Improving the Tic Tac Toe Game
 
-# This is great for learning the fundamentals of code, but actually isn't very
-# realistic. Most software engineers spend their time modifying and maintaining
-# existing programs, not writing entirely new ones.
+# So far, you’ve spent a lot of time writing new programs — which is great for
+# learning. But in reality, most developers spend time improving or fixing
+# existing programs.
 
-# Below is the same program as in the example. Your challenge is to implement
-# some improvements:
+# In this challenge, you’ll improve the existing tic tac toe game.
 
-# 1. Right now users can place their tiles over the other
-#    user's tiles. Prevent this.
+# TASKS:
+# 1. Prevent players from placing a tile over another player’s tile ❌
+# 2. Make the game end in a draw if no more free spaces are left 🔚
+# 3. (Optional) Make a 5x5 board 🧩
+# 4. (Optional) Make board size dynamic using a board_size parameter 🧠
 
-# 2. Right now if the game reaches a draw with no more free
-#    spaces, the game doesn't end. Make it end at that
-#    point.
+# For now, we’ll do tasks 1 and 2.
 
-# 3. If you want a real challenge, try to rework this
-#    program to support a 5x5 board rather than a 3x3 board.
-
-# 4. If you're still not satisfied, try to rework this
-#    program to take a parameter `board_size` and play a
-#    game with a board of that size.
-
-# This is getting really challenging now — and is entirely optional. Don't
-# forget about your assessment!
+# ✅ TIC TAC TOE GAME
 
 def play_game():
   board = [
@@ -33,34 +25,46 @@ def play_game():
     [".", ".", "."]
   ]
   player = "X"
-  while not is_game_over(board):
+
+  while not is_game_over(board) and not is_board_full(board):
     print(print_board(board))
-    print("It's " + player + "'s turn.")
-    # `input` asks the user to type in a string
-    # We then need to convert it to a number using `int`
-    row = int(input("Enter a row: "))
-    column = int(input("Enter a column: "))
+    print(f"It's {player}'s turn.")
+
+    # Keep asking until the move is valid
+    valid_move = False
+    while not valid_move:
+      row = int(input("Enter a row (0 to 2): "))
+      column = int(input("Enter a column (0 to 2): "))
+
+      if board[row][column] == ".":
+        valid_move = True
+      else:
+        print("That space is taken. Please try again.")
+
     board = make_move(board, row, column, player)
-    if player == "X":
-      player = "O"
-    else:
-      player = "X"
+
+    # Switch player
+    player = "O" if player == "X" else "X"
+
   print(print_board(board))
-  print("Game over!")
+  if is_game_over(board):
+    print(f"Game over! Player {'O' if player == 'X' else 'X'} wins!")
+  else:
+    print("It's a draw!")
+
 
 def print_board(board):
   formatted_rows = []
   for row in board:
     formatted_rows.append(" ".join(row))
-  grid = "\n".join(formatted_rows)
-  return grid
+  return "\n".join(formatted_rows)
+
 
 def make_move(board, row, column, player):
   board[row][column] = player
   return board
 
 
-# This function will extract three cells from the board
 def get_cells(board, coord_1, coord_2, coord_3):
   return [
     board[coord_1[0]][coord_1[1]],
@@ -68,19 +72,16 @@ def get_cells(board, coord_1, coord_2, coord_3):
     board[coord_3[0]][coord_3[1]]
   ]
 
-# This function will check if the group is fully placed with player marks, no
-# empty spaces.
+
 def is_group_complete(board, coord_1, coord_2, coord_3):
   cells = get_cells(board, coord_1, coord_2, coord_3)
   return "." not in cells
 
-# This function will check if the group is all the same
-# player mark: X X X or O O O
+
 def are_all_cells_the_same(board, coord_1, coord_2, coord_3):
   cells = get_cells(board, coord_1, coord_2, coord_3)
   return cells[0] == cells[1] and cells[1] == cells[2]
 
-# We'll make a list of groups to check:
 
 groups_to_check = [
   # Rows
@@ -96,18 +97,22 @@ groups_to_check = [
   [(0, 2), (1, 1), (2, 0)]
 ]
 
+
 def is_game_over(board):
-  # We go through our groups
   for group in groups_to_check:
-    # If any of them are empty, they're clearly not a winning row, so we skip
-    # them.
     if is_group_complete(board, group[0], group[1], group[2]):
       if are_all_cells_the_same(board, group[0], group[1], group[2]):
-        return True # We found a winning row!
-        # Note that return also stops the function
-  return False # If we get here, we didn't find a winning row
+        return True
+  return False
 
-# And test it out:
 
+def is_board_full(board):
+  for row in board:
+    if "." in row:
+      return False
+  return True
+
+
+# ✅ LET'S PLAY
 print("Game time!")
 play_game()
