@@ -92,7 +92,9 @@ add_one(add_one(add_one(add_one(add_one(add_one(1))))))
 # @TASK: Play around with building complex expressions in the space below.
 
 # EXPRESSIONS PLAYGROUND BEGINS
-
+print(add_one(10) + 5)
+print(add_one(2 + 3))
+print(4 * add_one(3 + 1))
 
 
 # EXPRESSIONS PLAYGROUND ENDS
